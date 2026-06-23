@@ -1,3 +1,22 @@
+# Python
 __pycache__/
-*.xlsx
+*.pyc
+*.pyo
+.Python
+
+#Entornos
+.venv/
+venv/
+env/
+
+# Editores
 .vscode/
+.idea/
+
+#Output
+horarios_finales.xlsx
+*.xlsx
+
+#Sistema
+.DS_Store
+Thumbs.db
