@@ -73,7 +73,7 @@ def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
             c = ws.cell(row=ri, column=1, value=label)
             c.font = Font(size=9)
             c.alignment = Alignment(horizontal="right", vertical="center")
-            c.border = borde_fino()
+            c.border = borde_f()
             for ci in range(2, 2 + len(DIAS_SEM)):
                 ws.cell(row=ri, column=ci).border = borde_f()
 
