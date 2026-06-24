@@ -16,8 +16,8 @@ def borde_f():
 def slots_30min():
     """Genera celdas de 30 min desde 7:00 hasta 22:00"""
     slots = []
-    total = 7 * 60   # 7:00
-    fin = 22 * 60    # 22:00
+    total = 7 * 60   
+    fin = 22 * 60    
     while total < fin:
         slots.append(total)
         total += 30
@@ -123,4 +123,4 @@ def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
         ws.freeze_panes = "B3"
 
     wb.save(archivo_s)
-    print(f"\n Excel generado correctamente: {archivo_salida}")
+    print(f"\n Excel generado correctamente: {archivo_s}")
