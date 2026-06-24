@@ -23,7 +23,7 @@ def pedir_num(prompt, opciones=None, t_cero=True):
             raise Reiniciar()
         if val == ATRAS:
             raise Retroceder()
-        if permitir_cero and val == "0":
+        if t_cero and val == "0":
             return 0
         try:
             v = int(val)
