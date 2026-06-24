@@ -1,7 +1,7 @@
 """Pedir datos al usuario"""
 
 from .constants import DIAS_SEM, HORARIOS_DB
-from .navigation import pedir_num, pedir_text, ayuda_nav, Retroceder
+from .nav import pedir_num, pedir_text, ayuda_nav, Retroceder
 from .ui import sub
 
 
