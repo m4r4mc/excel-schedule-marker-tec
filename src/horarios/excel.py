@@ -56,7 +56,7 @@ def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
 
         ws.cell(row=2, column=1, value="Hora").font = Font(bold=True, color="FFFFFF")
         ws.cell(row=2, column=1).fill = PatternFill("solid", start_color="1E3A5F")
-        ws.cell(row=2, column=1).border = borde_fino()
+        ws.cell(row=2, column=1).border = borde_f()
         for ci, dia in enumerate(DIAS_SEM, 2):
             c = ws.cell(row=2, column=ci, value=dia)
             c.font = Font(bold=True, color="FFFFFF")
@@ -92,7 +92,7 @@ def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
                         cell.fill = color
                         cell.font = Font(color="FFFFFF", bold=True, size=9)
                         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-                        cell.border = borde_fino()
+                        cell.border = borde_f()
 
         dr = len(SLOTS) + 5
         ws.cell(row=dr, column=1, value="GRUPOS SELECCIONADOS").font = Font(bold=True, color="FFFFFF")
