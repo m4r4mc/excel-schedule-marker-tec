@@ -4,7 +4,7 @@ from itertools import product
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
-from .constants import DIAS_SEMANA, COLORES
+from .constants import DIAS_SEM, COLORES
 from .combinaciones import choque
 
 
@@ -29,12 +29,12 @@ def min_a_label(m):
     return f"{h}:{mi:02d}"
 
 
-def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
+def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
     wb = Workbook()
     del wb["Sheet"]
 
     combos = list(product(*[c["grupos"] for c in cursos]))
-    combos = [c for c in combos if not hay_choque(c)]
+    combos = [c for c in combos if not choque(c)]
     combos.sort(key=lambda c: sum(g["interes"] for g in c), reverse=True)
 
     ws_resumen = wb.create_sheet("Resumen")
@@ -57,7 +57,7 @@ def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
         ws.cell(row=2, column=1, value="Hora").font = Font(bold=True, color="FFFFFF")
         ws.cell(row=2, column=1).fill = PatternFill("solid", start_color="1E3A5F")
         ws.cell(row=2, column=1).border = borde_fino()
-        for ci, dia in enumerate(DIAS_SEMANA, 2):
+        for ci, dia in enumerate(DIAS_SEM, 2):
             c = ws.cell(row=2, column=ci, value=dia)
             c.font = Font(bold=True, color="FFFFFF")
             c.fill = PatternFill("solid", start_color="1E3A5F")
@@ -65,7 +65,7 @@ def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
             c.border = borde_f()
 
         ws.column_dimensions["A"].width = 14
-        for ci in range(2, 2 + len(DIAS_SEMANA)):
+        for ci in range(2, 2 + len(DIAS_SEM)):
             ws.column_dimensions[ws.cell(row=2, column=ci).column_letter].width = 20
 
         for ri, slot in enumerate(SLOTS, 3):
@@ -74,7 +74,7 @@ def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
             c.font = Font(size=9)
             c.alignment = Alignment(horizontal="right", vertical="center")
             c.border = borde_fino()
-            for ci in range(2, 2 + len(DIAS_SEMANA)):
+            for ci in range(2, 2 + len(DIAS_SEM)):
                 ws.cell(row=ri, column=ci).border = borde_f()
 
         for gi, g in enumerate(combo):
@@ -84,7 +84,7 @@ def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
             ini_m, fin_m = g["horario"]["ini_m"], g["horario"]["fin_m"]
 
             for d in g["dias"]:
-                col = DIAS_SEMANA.index(d) + 2
+                col = DIAS_SEM.index(d) + 2
                 for ri, slot in enumerate(SLOTS, 3):
                     if ini_m <= slot < fin_m:
                         cell = ws.cell(row=ri, column=col)
@@ -118,7 +118,7 @@ def generar_excel(cursos, archivo_salida="horarios_finales.xlsx"):
                 c = ws.cell(row=fila, column=col, value=val)
                 c.fill = color
                 c.font = Font(color="FFFFFF", size=10)
-                c.border = borde_fino()
+                c.border = borde_f()
 
         ws.freeze_panes = "B3"
 
