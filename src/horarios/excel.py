@@ -122,5 +122,5 @@ def generar_excel(cursos, archivo_s="horarios_finales.xlsx"):
 
         ws.freeze_panes = "B3"
 
-    wb.save(archivo_salida)
+    wb.save(archivo_s)
     print(f"\n Excel generado correctamente: {archivo_salida}")
