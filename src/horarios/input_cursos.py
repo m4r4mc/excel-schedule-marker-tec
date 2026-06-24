@@ -1,11 +1,11 @@
 """Pedir datos al usuario"""
 
-from .constants import DIAS_SEMANA, HORARIOS_DB
-from .navigation import pedir_numero, pedir_texto, ayuda_navegacion, Retroceder
+from .constants import DIAS_SEMA, HORARIOS_DB
+from .navigation import pedir_num, pedir_text, ayuda_nav, Retroceder
 from .ui import sub
 
 
-def pedir_un_curso():
+def pedir_curso():
     """
     Pide los datos del curso: nombre, cantidad de dias, duración, grupos
     Cambia de curso si el usuario digita 0
@@ -13,25 +13,25 @@ def pedir_un_curso():
     """
     while True:
         try:
-            nombre = pedir_texto(
+            nombre = pedir_text(
                 "Nombre del curso (0 para terminar, << atrás, >> reiniciar todo)",
-                permitir_cero=True,
+                t_cero=True,
             )
             if nombre == "0":
                 return None
 
             sub("Configuración del curso")
-            ayuda_navegacion()
-            tipo = pedir_numero("Tipo: 1. 1 día/semana o 2. 2 días/semana", [1, 2], permitir_cero=False)
-            dur_op = pedir_numero("Duración: 1. 1h 50m, 2. 2h 50m, 3. 3h 50m", [1, 2, 3], permitir_cero=False)
+            ayuda_nav()
+            tipo = pedir_num("Tipo: 1. 1 día/semana o 2. 2 días/semana", [1, 2], t_cero=False)
+            dur_op = pedir_num("Duración: 1. 1h 50m, 2. 2h 50m, 3. 3h 50m", [1, 2, 3], t_cero=False)
             dur = [110, 170, 230][dur_op - 1]
 
             grupos = []
 
             while True:
                 try:
-                    ayuda_navegacion()
-                    num = pedir_numero(f"Número de grupo para {nombre} (0 para terminar)")
+                    ayuda_nav()
+                    num = pedir_num(f"Número de grupo para {nombre} (0 para terminar)")
                     if num == 0:
                         if not grupos:
                             print("  Ingrese al menos un grupo antes de terminar.")
@@ -40,26 +40,26 @@ def pedir_un_curso():
 
                     sub(f"Grupo {num}")
 
-                    ayuda_navegacion()
+                    ayuda_nav()
                     if tipo == 2:
                         dias = (
                             ["Martes", "Jueves"]
-                            if pedir_numero("1. K/J | 2. M/V", [1, 2], permitir_cero=False) == 1
+                            if pedir_num("1. K/J | 2. M/V", [1, 2], t_cero=False) == 1
                             else ["Miércoles", "Viernes"]
                         )
                     else:
-                        for i, d in enumerate(DIAS_SEMANA, 1):
+                        for i, d in enumerate(DIAS_SEM, 1):
                             print(f"    {i}. {d}")
-                        dias = [DIAS_SEMANA[pedir_numero("Seleccione un día", list(range(1, 7)), permitir_cero=False) - 1]]
+                        dias = [DIAS_SEM[pedir_num("Seleccione un día", list(range(1, 7)), t_cero=False) - 1]]
 
                     opciones = [h for h in HORARIOS_DB if h["dur"] == dur]
 
                     for i, h in enumerate(opciones, 1):
                         print(f"    {i}. {h['ini']} – {h['fin']}")
 
-                    ayuda_navegacion()
-                    h = opciones[pedir_numero("Seleccione horario", list(range(1, len(opciones) + 1)), permitir_cero=False) - 1]
-                    interes = pedir_numero("Interés (1-10)", list(range(1, 11)), permitir_cero=False)
+                    ayuda_nav()
+                    h = opciones[pedir_num("Seleccione horario", list(range(1, len(opciones) + 1)), t_cero=False) - 1]
+                    interes = pedir_num("Interés (1-10)", list(range(1, 11)), t_cero=False)
 
                     grupos.append({"num": num, "dias": dias, "horario": h, "interes": interes})
                     print(f"  Grupo {num} agregado.")
@@ -83,7 +83,7 @@ def ingresar_cursos():
     cursos = []
     while True:
         try:
-            resultado = pedir_un_curso()
+            resultado = pedir_curso()
             if resultado is None:
                 if not cursos:
                     print("  Ingrese al menos un curso antes de terminar.")
