@@ -15,7 +15,7 @@ if "cursos" not in st.session_state:
     st.session_state.cursos = []
 
 TLABELS = {110: "1h 50min", 170: "2h 50 min", 230: "3h 50min"}
-D_2 = {"Martes y Jueves": ["Martes", "Jueves"], "Miercoles y Viernes": ["Miercoles", "Viernes"]}
+D_2 = {"Martes y Jueves": ["Martes", "Jueves"], "Miércoles y Viernes": ["Miércoles", "Viernes"]}
 
 st.title("Generador de horarios - TEC")
 st.caption("Digite el curso y su informacion respectiva, la app genera un excel con todas las combinaciones de horarios disponibles")
