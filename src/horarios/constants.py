@@ -21,4 +21,4 @@ HORARIOS_DB = [
     {"ini": "5:00", "fin": "8:50", "dur": 230, "ini_m": 1020, "fin_m": 1250},
 ]
 
-COLOR = ["FF6B6B", "4D96FF", "6BCB77", "FFD93D", "845EC2", "FF9671", "00C9A7"]
+COLORES = ["FF6B6B", "4D96FF", "6BCB77", "FFD93D", "845EC2", "FF9671", "00C9A7"]
