@@ -4,18 +4,18 @@ Generador de Horarios: version web
 
 import io
 import streamlit as st
-from interstools import product
+from itertools import product
 from src.horarios.constants import DIAS_SEM, HORARIOS_DB
 from src.horarios.combinaciones import choque
 from src.horarios.excel import generar_excel
 
-st.set_page_config(page_title= "Generador de Horarios", layout="centered")
+st.set_page_config(page_title="Generador de Horarios", layout="centered")
 
 if "cursos" not in st.session_state:
-  st.session_state.cursos = []
+    st.session_state.cursos = []
 
 TLABELS = {110: "1h 50min", 170: "2h 50 min", 230: "3h 50min"}
-D_2 = {"Martes y Jueves": ["Martes", "Jueves"], "Miercoles y Viernes:" ["Miercoles", "Viernes"]}
+D_2 = {"Martes y Jueves": ["Martes", "Jueves"], "Miercoles y Viernes": ["Miercoles", "Viernes"]}
 
 st.title("Generador de horarios - TEC")
 st.caption("Digite el curso y su informacion respectiva, la app genera un excel con todas las combinaciones de horarios disponibles")
@@ -26,30 +26,30 @@ with st.form("form_curso", clear_on_submit=True):
     nom_curso = st.text_input("Nombre del curso")
     col1, col2 = st.columns(2)
     with col1:
-      tipo = st.radio("Días por semana", ["1 día", "2 días"], horizontal=True)
+        tipo = st.radio("Días por semana", ["1 día", "2 días"], horizontal=True)
     with col2:
-      dur_label = st.radio("Duración de cada sesión", list(TLABELS.values()), horizontal=True)
-    dur = [k for k, v in TLABELS.items() if v == tlabel][0]
+        dur_label = st.radio("Duración de cada sesión", list(TLABELS.values()), horizontal=True)
+    dur = [k for k, v in TLABELS.items() if v == dur_label][0]
 
     anotherc = st.form_submit_button("Crear curso")
     if anotherc:
-      if not nom_curso.strip():
-        st.warning("Digite un nombre para el curso")
-      else:
-        st.session_state.cursos.append({
-          "nombre": nom_curso.strip(),
-          "tipo": tipo,
-          "dur": dur,
-          "grupos": [],
-        })
-        st.success(f"Curso '{nom_curso}' agregado.")
+        if not nom_curso.strip():
+            st.warning("Digite un nombre para el curso")
+        else:
+            st.session_state.cursos.append({
+                "nombre": nom_curso.strip(),
+                "tipo": tipo,
+                "dur": dur,
+                "grupos": [],
+            })
+            st.success(f"Curso '{nom_curso}' agregado.")
 
 #Agregar grupos
 if st.session_state.cursos:
-  st.header("2. Agregar los grupos del curso")
+    st.header("2. Agregar los grupos del curso")
 
-  for ci, curso in enumerate(st.session_state.cursos):
-        with st.expander(f" {curso['nombre']}  —  {TLABELS[curso['dur']]}  ({len(curso['grupos'])} grupo(s))", expanded=True):
+    for ci, curso in enumerate(st.session_state.cursos):
+        with st.expander(f"{curso['nombre']}  —  {TLABELS[curso['dur']]}  ({len(curso['grupos'])} grupo(s))", expanded=True):
 
             op_horario = [h for h in HORARIOS_DB if h["dur"] == curso["dur"]]
             horario_labels = [f"{h['ini']} – {h['fin']}" for h in op_horario]
@@ -58,7 +58,7 @@ if st.session_state.cursos:
                 num_grupo = st.number_input("Número de grupo", min_value=1, step=1, key=f"num_{ci}")
                 if curso["tipo"] == "2 días":
                     d_2 = st.selectbox("Días", list(D_2.keys()), key=f"par_{ci}")
-                    dias_sel = DIAS_2[par_dias]
+                    dias_sel = D_2[d_2]
                 else:
                     dia_sel = st.selectbox("Día", DIAS_SEM, key=f"dia_{ci}")
                     dias_sel = [dia_sel]
@@ -96,31 +96,30 @@ if st.session_state.cursos:
                     st.rerun()
 
 #Opciones para reiniciar
-if st.ssesion_state.cursos:
-  if st.button("Reiniciar todo"):
-    st.session_state.cursos = []
-    st.rerun()
+if st.session_state.cursos:
+    if st.button("Reiniciar todo"):
+        st.session_state.cursos = []
+        st.rerun()
 
 #Excel
 st.header("3. Generar horario")
-cready = [c for in st.session_states.cursos if c["grupos"]]
+cready = [c for c in st.session_state.cursos if c["grupos"]]
 
-if nor cready:
-  st.info("Para generar el documento excel del horario, tiene que agregar al menos un (1) curso con al menos un (1) grupo :) ")
+if not cready:
+    st.info("Para generar el documento excel del horario, tiene que agregar al menos un (1) curso con al menos un (1) grupo :) ")
 else:
-  if st.button("Generar excel con todas las combinaciones", type="primary"):
-    buffer = io.BytesI0()
-    cantidad= = generar_exc(cready, archivo_s=buffer)
-    buffer.seek(0)
+    if st.button("Generar excel con todas las combinaciones", type="primary"):
+        buffer = io.BytesIO()
+        cantidad = generar_excel(cready, archivo_s=buffer)
+        buffer.seek(0)
 
-    if cantidad ==0:
-      st.error("Todas las combinaciones de horarios tienen al menos un choque entre cursos. Revise sus opciones o elimine un curso para generar una combinacion sin choques.")
-    else:
-      st.success(f"Se generaron {cantidad} combinaciones de horarios")
-      st.dowload_button(
-        label="Descargar el archivo horarios_finales.xlsx:"
-        data=buffer
-        file_name="horarios_finales.xlsx"
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      )
-    
+        if cantidad == 0:
+            st.error("Todas las combinaciones de horarios tienen al menos un choque entre cursos. Revise sus opciones o elimine un curso para generar una combinacion sin choques.")
+        else:
+            st.success(f"Se generaron {cantidad} combinaciones de horarios")
+            st.download_button(
+                label="Descargar el archivo horarios_finales.xlsx",
+                data=buffer,
+                file_name="horarios_finales.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
