@@ -3,12 +3,9 @@
 ATRAS = "<<"
 REINICIO = ">>"
 
-
 class Reiniciar(Exception):
     """Se lanza para reiniciar todo el programa desde cero."""
     pass
-
-
 class Retroceder(Exception):
     """Se lanza para volver al paso anterior."""
     pass
