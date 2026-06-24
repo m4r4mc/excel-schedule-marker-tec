@@ -5,7 +5,7 @@ Ejecutar con: python main.py
 """
 
 from src.horarios.ui import limpiar, titulo
-from src.horarios.navigation import Reiniciar, ATRAS, REINICIO
+from src.horarios.nav import Reiniciar, ATRAS, REINICIO
 from src.horarios.input_cursos import ingresar_cursos
 from src.horarios.excel import generar_excel
 
